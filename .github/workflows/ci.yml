@@ -47,13 +47,13 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            mkdir -p ~/app
-            cd ~/app
-
-            if [ -d ".git" ]; then
+            if [ -d "~/app/.git" ]; then
+              cd ~/app
               git pull origin ${{ github.ref_name }}
             else
-              rm -rf * .gitignore .github 2>/dev/null || true
+              rm -rf ~/app
+              mkdir -p ~/app
+              cd ~/app
               git clone https://github.com/${{ github.repository }}.git .
             fi
 
