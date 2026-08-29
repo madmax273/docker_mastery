@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongocontainer
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - mynetwork
+
+  redis:
+    image: redis
+    container_name: rediscontainer
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+
+  fastapi:
+    build:
+      context: ./BE  
+      dockerfile: Dockerfile
+    container_name: fastapicontainer
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URL=mongodb://mongocontainer:27017/mydb
+      - REDIS_URL=redis://rediscontainer:6379
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - mynetwork
+
+  nextjs:
+    build:
+      context: ./FE
+      dockerfile: Dockerfile
+    container_name: nextcontainer
+    ports:
+      - "3000:3000"
+    depends_on:
+      - fastapi
+    networks:
+      - mynetwork
+
+volumes:
+  mongodata:
+
+networks:
+  mynetwork:
+    driver: bridge
