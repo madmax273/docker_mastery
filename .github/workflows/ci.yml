@@ -53,6 +53,7 @@ jobs:
             if [ -d ".git" ]; then
               git pull origin ${{ github.ref_name }}
             else
+              rm -rf * .gitignore .github 2>/dev/null || true
               git clone https://github.com/${{ github.repository }}.git .
             fi
 
