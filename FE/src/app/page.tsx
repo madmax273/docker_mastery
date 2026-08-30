@@ -1,7 +1,8 @@
 "use client";
 
 async function checkHealth() {
-  const response = await fetch("http://localhost:8000/health");
+  const response = await fetch(`http://35.154.105.166:8000/health`);
+  // const response = await fetch(`http://localhost:8000/health`);
   const data = await response.json();
   console.log(data);
 }
