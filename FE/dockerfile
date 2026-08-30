@@ -2,12 +2,24 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Copy dependency definitions
 COPY package*.json ./
 
-RUN npm install
+# Install all dependencies (needed for build)
+RUN npm ci
 
+# Copy full application code
 COPY . .
+
+# Set environment to production
+ENV NODE_ENV=production
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
+
+# Build the optimized production application
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# Start production server (DO NOT use 'npm run dev')
+CMD ["npm", "run", "start"]
